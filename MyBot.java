@@ -22,6 +22,7 @@ public class MyBot {
             networking.updateMap(gameMap);
 
             for (final Ship ship : gameMap.getMyPlayer().getShips().values()) {
+            	//Log.log("ship " + (Object)ship);
                 if (ship.getDockingStatus() != Ship.DockingStatus.Undocked) {
                     continue;
                 }
