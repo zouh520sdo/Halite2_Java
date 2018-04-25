@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import hlt.Constants;
+import hlt.DockMove;
 import hlt.GameMap;
+import hlt.Log;
 import hlt.Move;
 import hlt.Move.MoveType;
 import hlt.Navigation;
@@ -88,7 +90,10 @@ public class Halite2Controller {
 		double[] info = getGameInfo();
 		
 		for (Ship ship: gameMap.getMyPlayer().getShips().values()) {
+			Log.log("Ship " + ship.getId() + " get started");
 			double[] shipInfo = getShipInfo(ship);
+			Log.log("Ship info length " + shipInfo.length);
+			Log.log("info length " + info.length);
 			double[] input = new double[33];
 			for (int i=0; i<33; i++) {
 				if (i<8) {
@@ -98,8 +103,10 @@ public class Halite2Controller {
 					input[i] = info[i-8];
 				}
 			}
-			double[] output = commanderNN.calc(input);
+			double[] output = commanderNN.calc(input, true);
 			moveList.add(getMove(output, ship));
+			
+			Log.log("Ship " + ship.getId() + " add move");
 		}
 			
 		return moveList;
@@ -109,11 +116,16 @@ public class Halite2Controller {
 		double move = Double.NEGATIVE_INFINITY;
 		int moveI = -1;
 		for (int i=0; i<4; i++) {
-			if (input[i] > move) {
-				move = input[i];
-				moveI = i;
+			if ((i==1 && ship.getDockingStatus() == Ship.DockingStatus.Docked) || i!=1) {
+				if (input[i] > move) {
+					move = input[i];
+					moveI = i;
+				}
 			}
+			Log.log("State " + i + " score " + input[i]);
 		}
+		
+		Log.log("move I " + moveI);
 		
 		if (moveI == 0) { /*Noop*/
 			return new Move(MoveType.Noop, ship);
@@ -124,19 +136,29 @@ public class Halite2Controller {
 		else if (moveI == 2) {
 			ArrayList<Ship> ships = new ArrayList<Ship>();
 			for (Player player: gameMap.getAllPlayers()) {
+				if (player.getId() == gameMap.getMyPlayerId()) continue;
 				for (Ship s: player.getShips().values()){
 					ships.add(s);
 				}
 			}
-			return Navigation.navigateShipTowardsTarget(gameMap, ship, ships.get((int)Math.floor(input[4]*ships.size())), (int)input[6] * Constants.MAX_SPEED, 
+			int shipI = (int)Math.floor(input[4]*ships.size());
+			int maxSpeed = (int)(input[6] * Constants.MAX_SPEED);
+			Log.log("Target Ship " + ships.get(shipI));
+			Log.log("Max Speed " + input[6]  + "\n" + input[6] * Constants.MAX_SPEED + "\n" + maxSpeed);
+			return Navigation.navigateShipTowardsTarget(gameMap, ship, ships.get(shipI), maxSpeed, 
 					true, Constants.MAX_NAVIGATION_CORRECTIONS, Math.PI/180.0);
 		}
 		else if (moveI == 3) {
 			ArrayList<Planet> planets = new ArrayList<Planet>();
 			for (Planet planet: gameMap.getAllPlanets().values()) {
+				if (ship.canDock(planet) && !planet.isFull()) {
+                    return new DockMove(ship, planet);
+                }
 				planets.add(planet);
 			}
-			return Navigation.navigateShipToDock(gameMap, ship, planets.get((int) Math.floor(input[5]*planets.size())), (int)input[6] * Constants.MAX_SPEED);
+			int maxSpeed = (int)(input[6] * Constants.MAX_SPEED);
+			Log.log("Max Speed " + input[6]  + "\n" + input[6] * Constants.MAX_SPEED + "\n" + maxSpeed);
+			return Navigation.navigateShipToDock(gameMap, ship, planets.get((int) Math.floor(input[5]*planets.size())), maxSpeed);
 		}
 		else {
 			return new Move(MoveType.Noop, ship);
@@ -156,11 +178,11 @@ public class Halite2Controller {
 		
 		for (Ship ship: gameMap.getMyPlayer().getShips().values()) {
 			double[] output = getShipInfo(ship);
-			output = sigmoidAll(output);
+			//output = sigmoidAll(output);
 			for (int i=0; i<meInfo.length; i++) {
 				meInfo[i] += output[i];
 			}
-			meInfo = meNN.calc(meInfo);
+			meInfo = meNN.calc(meInfo, false);
 		}
 		
 		for (Player player: gameMap.getAllPlayers()) {
@@ -169,21 +191,21 @@ public class Halite2Controller {
 			}
 			for (Ship ship: player.getShips().values()) {
 				double[] output = getShipInfo(ship);
-				output = sigmoidAll(output);
+				//output = sigmoidAll(output);
 				for (int i=0; i<enemiesInfo.length; i++) {
 					enemiesInfo[i] += output[i];
 				}
-				enemiesInfo = enemiesNN.calc(enemiesInfo);
+				enemiesInfo = enemiesNN.calc(enemiesInfo, false);
 			}
 		}
 		
 		for (Planet planet: gameMap.getAllPlanets().values()) {
 			double[] output = getPlanetInfo(planet);
-			output = sigmoidAll(output);
+			//output = sigmoidAll(output);
 			for (int i=0; i<planetsInfo.length; i++) {
 				planetsInfo[i] += output[i];
 			}
-			planetsInfo = planetsNN.calc(planetsInfo);
+			planetsInfo = planetsNN.calc(planetsInfo, false);
 		}
 		
 		for (int i=0; i<info.length; i++) {

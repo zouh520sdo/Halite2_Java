@@ -35,7 +35,7 @@ public class Layer {
 		}
 	}
 	
-	double[] calc(double[] input, boolean isActive) {
+	double[] calc(double[] input, boolean isActive, boolean needSigmoid) {
 		if (input == null) return null;
 		double[] output = new double[col];
 		for (int j=0; j < col; j++) {
@@ -43,7 +43,9 @@ public class Layer {
 			for (int i=0; i < row; i++) {
 				output[j] += (input[i]*weights[i][j]);
 			}
-			output[j] = sigmoid(output[j]);
+			if (needSigmoid) {
+				output[j] = sigmoid(output[j]);
+			}
 			if (isActive) {
 				output[j] = activationFunction(output[j]);
 			}

@@ -122,10 +122,10 @@ public class NeuralNetwork {
 	 * @param input
 	 * @return
 	 */
-	public double[] calc(double[] input) {
+	public double[] calc(double[] input, boolean needSigmoid) {
 		double[] output = input;
 		for (int i=0; i<layers.length; i++) {
-			output = layers[i].calc(output, true);
+			output = layers[i].calc(output, false, needSigmoid);
 		}
 		return output;
 	}
@@ -135,8 +135,8 @@ public class NeuralNetwork {
 	 * @param input
 	 * @return
 	 */
-	public boolean[] getButtons(double[] input) {
-		double[] rawOutput = calc(input);
+	public boolean[] getButtons(double[] input, boolean needSigmoid) {
+		double[] rawOutput = calc(input, needSigmoid);
 		boolean[] buttons = new boolean[rawOutput.length];
 		
 		if (rawOutput[0] == 0 && rawOutput[1] == 0) {

@@ -38,9 +38,7 @@ public class HuangBot {
             }
             */
             
-            moveList.addAll(controller.getMoveList());
-
-            
+            moveList.addAll(controller.getMoveList());   
             Networking.sendMoves(moveList);
         }
 	}
