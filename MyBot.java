@@ -20,9 +20,15 @@ public class MyBot {
         for (;;) {
             moveList.clear();
             networking.updateMap(gameMap);
+            
+            /*
+            for (final Planet planet: gameMap.getAllPlanets().values()) {
+            	Log.log("Planet " + planet);
+            }
+            */
 
             for (final Ship ship : gameMap.getMyPlayer().getShips().values()) {
-            	//Log.log("ship " + (Object)ship);
+            	Log.log("ship " + ship);
                 if (ship.getDockingStatus() != Ship.DockingStatus.Undocked) {
                     continue;
                 }
