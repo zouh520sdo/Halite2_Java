@@ -16,9 +16,22 @@ public class HuangBot {
 
 	public static void main(String[] args) {
 		
+		String playerName = "Huang";
+		String meNN = null;
+		String enemiesNN = null;
+		String planetsNN = null;
+		String commanderNN = null;
+		if (args.length > 0) {
+			playerName = args[0];
+	        meNN = playerName + "_meNN.txt";
+	        enemiesNN = playerName + "_enemiesNN.txt";
+	        planetsNN = playerName + "_planetsNN.txt";
+	        commanderNN = playerName + "_commanderNN.txt";
+		}
+		
 		final Networking networking = new Networking();
-        final GameMap gameMap = networking.initialize("Huang");
-        final Halite2Controller controller = new Halite2Controller(gameMap);
+        final GameMap gameMap = networking.initialize(playerName);
+        final Halite2Controller controller = new Halite2Controller(gameMap, meNN, enemiesNN, planetsNN, commanderNN);
         // We now have 1 full minute to analyse the initial map.
         final String initialMapIntelligence =
                 "width: " + gameMap.getWidth() +

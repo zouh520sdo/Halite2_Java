@@ -165,6 +165,13 @@ public class Halite2Controller {
 		}
 	}
 	
+	public void saveWeights(String meNNFile, String enemiesNNFile, String planetsNNFile, String commanderNNFile) {
+		meNN.writeWeightsToFile(meNNFile);
+		enemiesNN.writeWeightsToFile(enemiesNNFile);
+		planetsNN.writeWeightsToFile(planetsNNFile);
+		commanderNN.writeWeightsToFile(commanderNNFile);
+	}
+	
 	protected double[] getGameInfo() {
 		double[] info = new double[25];
 		
