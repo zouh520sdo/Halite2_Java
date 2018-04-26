@@ -87,13 +87,10 @@ public class Halite2Controller {
 	
 	public ArrayList<Move> getMoveList() {
 		ArrayList<Move> moveList = new ArrayList<>();
-		double[] info = getGameInfo();
+		double[] info = initializeGameInfo();
 		
 		for (Ship ship: gameMap.getMyPlayer().getShips().values()) {
-			Log.log("Ship " + ship.getId() + " get started");
 			double[] shipInfo = getShipInfo(ship);
-			Log.log("Ship info length " + shipInfo.length);
-			Log.log("info length " + info.length);
 			double[] input = new double[33];
 			for (int i=0; i<33; i++) {
 				if (i<8) {
@@ -104,11 +101,12 @@ public class Halite2Controller {
 				}
 			}
 			double[] output = commanderNN.calc(input, true);
-			moveList.add(getMove(output, ship));
-			
-			Log.log("Ship " + ship.getId() + " add move");
+			Move move = getMove(output, ship);
+			if (move != null) {
+				moveList.add(move);
+			}
+			info = updateGameInfo(ship, info);
 		}
-			
 		return moveList;
 	}
 	
@@ -122,10 +120,9 @@ public class Halite2Controller {
 					moveI = i;
 				}
 			}
-			Log.log("State " + i + " score " + input[i]);
 		}
 		
-		Log.log("move I " + moveI);
+		Log.log("ShipID " + ship.getId() + " choose " + moveI);
 		
 		if (moveI == 0) { /*Noop*/
 			return new Move(MoveType.Noop, ship);
@@ -136,7 +133,9 @@ public class Halite2Controller {
 		else if (moveI == 2) {
 			ArrayList<Ship> ships = new ArrayList<Ship>();
 			for (Player player: gameMap.getAllPlayers()) {
-				if (player.getId() == gameMap.getMyPlayerId()) continue;
+				if (player.getId() == gameMap.getMyPlayerId()) {
+					continue;
+				}
 				for (Ship s: player.getShips().values()){
 					ships.add(s);
 				}
@@ -150,6 +149,7 @@ public class Halite2Controller {
 		}
 		else if (moveI == 3) {
 			ArrayList<Planet> planets = new ArrayList<Planet>();
+			Log.log("planets " + planets);
 			for (Planet planet: gameMap.getAllPlanets().values()) {
 				if (ship.canDock(planet) && !planet.isFull()) {
                     return new DockMove(ship, planet);
@@ -163,7 +163,6 @@ public class Halite2Controller {
 		else {
 			return new Move(MoveType.Noop, ship);
 		}
-		
 	}
 	
 	protected double[] getGameInfo() {
@@ -218,6 +217,73 @@ public class Halite2Controller {
 			else {
 				info[i] = planetsInfo[i-16];
 			}
+		}
+		
+		return info;
+	}
+	
+	protected double[] initializeGameInfo() {
+		double[] info = new double[25];
+		
+		double[] meInfo = new double[8];
+		Arrays.fill(meInfo, 0);
+		double[] enemiesInfo = new double[8];
+		Arrays.fill(enemiesInfo, 0);
+		double[] planetsInfo = new double[9];
+		Arrays.fill(planetsInfo, 0);
+		
+		for (Player player: gameMap.getAllPlayers()) {
+			if (player.getId() == gameMap.getMyPlayerId()) {
+				continue;
+			}
+			for (Ship ship: player.getShips().values()) {
+				double[] output = getShipInfo(ship);
+				//output = sigmoidAll(output);
+				for (int i=0; i<enemiesInfo.length; i++) {
+					enemiesInfo[i] += output[i];
+				}
+				enemiesInfo = enemiesNN.calc(enemiesInfo, false);
+			}
+		}
+		
+		for (Planet planet: gameMap.getAllPlanets().values()) {
+			double[] output = getPlanetInfo(planet);
+			//output = sigmoidAll(output);
+			for (int i=0; i<planetsInfo.length; i++) {
+				planetsInfo[i] += output[i];
+			}
+			planetsInfo = planetsNN.calc(planetsInfo, false);
+		}
+		
+		for (int i=0; i<info.length; i++) {
+			if (i<8) {
+				info[i] = meInfo[i];
+			}
+			else if (i<16) {
+				info[i] = enemiesInfo[i-8];
+			}
+			else {
+				info[i] = planetsInfo[i-16];
+			}
+		}
+		
+		return info;
+	}
+	
+	protected double[] updateGameInfo(Ship ship, double[] gameInfo) {
+	
+		double[] meInfo = Arrays.copyOf(gameInfo, 8);
+		double[] info = Arrays.copyOf(gameInfo, gameInfo.length);
+		
+		double[] output = getShipInfo(ship);
+		//output = sigmoidAll(output);
+		for (int i=0; i<meInfo.length; i++) {
+			meInfo[i] += output[i];
+		}
+		meInfo = meNN.calc(meInfo, false);
+		
+		for (int i=0; i<meInfo.length; i++) {
+			info[i] = meInfo[i];
 		}
 		
 		return info;
