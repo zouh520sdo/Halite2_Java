@@ -151,13 +151,12 @@ public class Halite2Controller {
 			ArrayList<Planet> planets = new ArrayList<Planet>();
 			Log.log("planets " + planets);
 			for (Planet planet: gameMap.getAllPlanets().values()) {
-				if (ship.canDock(planet) && !planet.isFull()) {
-                    return new DockMove(ship, planet);
-                }
-				
-				if (!planet.isFull()) {
+				if ((!planet.isOwned() || planet.getOwner() == gameMap.getMyPlayerId()) && !planet.isFull()) {
+					if (ship.canDock(planet)) {
+						return new DockMove(ship, planet);
+					}
 					planets.add(planet);
-				}
+                }
 			}
 			int maxSpeed = (int)(input[6] * Constants.MAX_SPEED);
 			Log.log("Max Speed " + input[6]  + "\n" + input[6] * Constants.MAX_SPEED + "\n" + maxSpeed);

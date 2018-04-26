@@ -8,7 +8,7 @@ public class MyESTest {
     
 	public static void main(String[] args) {
 		
-		ESnew es = new ESnew(populationSize);
+		ESnew es = new ESnew(populationSize, "best");
         System.out.println("Evolving ");
         for (int gen = 0; gen < generations; gen++)
         {
