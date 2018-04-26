@@ -49,7 +49,7 @@ public class ESnew {
 		this.fitness = new double[populationSize];
 		this.elite = populationSize/4;
 		
-		population[0] = new Halite2ControllerHelper(filename, true);
+		population[0] = new Halite2ControllerHelper("Huang0", true);
 		
 		for(int i = 1; i < population.length; i++) {
 			population[i] = new Halite2ControllerHelper("Huang" + i, false);
