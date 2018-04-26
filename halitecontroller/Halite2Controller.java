@@ -154,7 +154,10 @@ public class Halite2Controller {
 				if (ship.canDock(planet) && !planet.isFull()) {
                     return new DockMove(ship, planet);
                 }
-				planets.add(planet);
+				
+				if (!planet.isFull()) {
+					planets.add(planet);
+				}
 			}
 			int maxSpeed = (int)(input[6] * Constants.MAX_SPEED);
 			Log.log("Max Speed " + input[6]  + "\n" + input[6] * Constants.MAX_SPEED + "\n" + maxSpeed);

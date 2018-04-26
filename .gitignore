@@ -23,3 +23,6 @@ hs_err_pid*
 
 # hlt replay file
 *.hlt
+
+# NN file
+*.txt
