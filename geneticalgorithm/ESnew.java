@@ -84,7 +84,7 @@ public class ESnew {
 		
 		// set true in the main function
 		//cmdLineOptions.setLevelRandSeed(r.nextInt());
-		for(int i = elite; i < population.length; i++) {
+		for(int i = 0; i < population.length; i++) {
 			evaluate(i);
 		}
 		sortPopulationByFitness();

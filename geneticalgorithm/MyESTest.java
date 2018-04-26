@@ -24,5 +24,4 @@ public class MyESTest {
         double secondResult = es.getNthFitness(1);
         System.out.println("Generation " + generations + " 2nd best " + secondResult);
 	}
-
 }
