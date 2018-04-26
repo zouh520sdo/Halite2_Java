@@ -8,7 +8,7 @@ public class MyESTest {
     
 	public static void main(String[] args) {
 		
-		ESnew es = new ESnew(populationSize, "best");
+		ESnew es = new ESnew(populationSize);
         System.out.println("Evolving ");
         for (int gen = 0; gen < generations; gen++)
         {
@@ -23,7 +23,6 @@ public class MyESTest {
         System.out.println("Generation " + generations + " best " + bestResult);
         double secondResult = es.getNthFitness(1);
         System.out.println("Generation " + generations + " 2nd best " + secondResult);
-
 	}
 
 }

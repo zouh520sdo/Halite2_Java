@@ -141,10 +141,8 @@ public class Halite2Controller {
 				}
 			}
 			int shipI = (int)Math.floor(input[4]*ships.size());
-			int maxSpeed = (int)(input[6] * Constants.MAX_SPEED);
 			Log.log("Target Ship " + ships.get(shipI));
-			Log.log("Max Speed " + input[6]  + "\n" + input[6] * Constants.MAX_SPEED + "\n" + maxSpeed);
-			return Navigation.navigateShipTowardsTarget(gameMap, ship, ships.get(shipI), maxSpeed, 
+			return Navigation.navigateShipTowardsTarget(gameMap, ship, ships.get(shipI), Constants.MAX_SPEED, 
 					true, Constants.MAX_NAVIGATION_CORRECTIONS, Math.PI/180.0);
 		}
 		else if (moveI == 3) {
@@ -158,9 +156,7 @@ public class Halite2Controller {
 					planets.add(planet);
                 }
 			}
-			int maxSpeed = (int)(input[6] * Constants.MAX_SPEED);
-			Log.log("Max Speed " + input[6]  + "\n" + input[6] * Constants.MAX_SPEED + "\n" + maxSpeed);
-			return Navigation.navigateShipToDock(gameMap, ship, planets.get((int) Math.floor(input[5]*planets.size())), maxSpeed);
+			return Navigation.navigateShipToDock(gameMap, ship, planets.get((int) Math.floor(input[5]*planets.size())), Constants.MAX_SPEED);
 		}
 		else {
 			return new Move(MoveType.Noop, ship);

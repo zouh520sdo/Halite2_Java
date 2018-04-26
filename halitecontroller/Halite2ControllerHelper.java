@@ -79,7 +79,7 @@ public class Halite2ControllerHelper {
 	
 	public void runGame() {
 		try {
-			Process pr = rt.exec("halite -d \"240 160\" \"java HuangBot " + playerName + "\" \"java MyBot\"");
+			Process pr = rt.exec("halite -d \"240 160\" \"java HuangBot " + playerName + "\" \"python mellendo/Halite2/MyBot.py\"");
 			pr.waitFor();
 			String filename = playerName + ".txt";
 			try {
