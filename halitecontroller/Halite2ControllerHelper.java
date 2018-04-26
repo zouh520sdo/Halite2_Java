@@ -88,7 +88,10 @@ public class Halite2ControllerHelper {
 				BufferedReader bufferedReader = new BufferedReader(reader);
 				List<Double> output = new ArrayList<Double>();
 				while ((line = bufferedReader.readLine()) != null) {
-					output.add(Double.parseDouble(line));
+					String[] numbers = line.split(" ");
+					for (int i=0; i<numbers.length; i++) {
+						output.add(Double.parseDouble(numbers[i]));
+					}
 				}
 				bufferedReader.close();
 				updateFitness(output);
