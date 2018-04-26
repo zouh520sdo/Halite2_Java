@@ -91,6 +91,7 @@ public class Halite2ControllerHelper {
 					String[] numbers = line.split(" ");
 					for (int i=0; i<numbers.length; i++) {
 						output.add(Double.parseDouble(numbers[i]));
+						// rank, shipNum, damage, lastframe
 					}
 				}
 				bufferedReader.close();
@@ -111,6 +112,7 @@ public class Halite2ControllerHelper {
 		fitness += 5000.0 / result.get(0);
 		fitness += 10 * result.get(1);
 		fitness += result.get(2) / 10.0;
+		fitness += 10.0*(300-result.get(3));
 	}
 	
 	public double getFitness() {
