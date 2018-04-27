@@ -109,13 +109,10 @@ public class Halite2ControllerHelper {
 	
 	public void updateFitness(List<Double> result) {
 		fitness = 0;
-		if (result.get(0).intValue() == 1) {
-			fitness += 20000;
-		}
-		fitness += 5000.0 / result.get(0);
+		fitness += 10000.0 / (result.get(0) * result.get(0));
 		fitness += 10 * result.get(1);
 		fitness += result.get(2) / 10.0;
-		fitness += 10.0*(300-result.get(3));
+		//fitness += 10.0*(300-result.get(3));
 	}
 	
 	public double getFitness() {

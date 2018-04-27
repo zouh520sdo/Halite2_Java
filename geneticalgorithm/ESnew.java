@@ -191,7 +191,7 @@ public class ESnew {
 	}
 	
 	public double getNthFitness(int n) {
-		System.out.println("The " + n + "th best is " + population[0].playerName);
+		System.out.println("The " + n + "th best is " + population[n].playerName);
 		population[n].meNN.writeWeightsToFile(n + "th_" + outputFile + "_meNN.txt");
 		population[n].enemiesNN.writeWeightsToFile(n + "th_" + outputFile + "_enemiesNN.txt");
 		population[n].planetsNN.writeWeightsToFile(n + "th_" + outputFile + "_planetsNN.txt");
