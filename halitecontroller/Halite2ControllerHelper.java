@@ -79,7 +79,7 @@ public class Halite2ControllerHelper {
 	
 	public void runGame() {
 		try {
-			Process pr = rt.exec("halite -d \"240 160\" \"java HuangBot " + playerName + "\" \"python mellendo/Halite2/MyBot.py\"");
+			Process pr = rt.exec("halite -d \"240 160\" \"java HuangBot " + playerName + "\" \"py mellendo/Halite2/MyBot.py\"");
 			pr.waitFor();
 			String filename = playerName + ".txt";
 			try {
@@ -109,10 +109,10 @@ public class Halite2ControllerHelper {
 	
 	public void updateFitness(List<Double> result) {
 		fitness = 0;
-		fitness += 5000.0 / result.get(0);
+		fitness += 10000.0 / (result.get(0) * result.get(0));
 		fitness += 10 * result.get(1);
 		fitness += result.get(2) / 10.0;
-		fitness += 10.0*(300-result.get(3));
+		//fitness += 10.0*(300-result.get(3));
 	}
 	
 	public double getFitness() {
