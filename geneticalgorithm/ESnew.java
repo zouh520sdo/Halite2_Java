@@ -181,7 +181,7 @@ public class ESnew {
     }
 	
 	public double getBestFitnesses() {
-
+		System.out.println("The best is " + population[0].playerName);
 		population[0].meNN.writeWeightsToFile(outputFile + "_meNN.txt");
 		population[0].enemiesNN.writeWeightsToFile(outputFile + "_enemiesNN.txt");
 		population[0].planetsNN.writeWeightsToFile(outputFile + "_planetsNN.txt");
@@ -191,6 +191,7 @@ public class ESnew {
 	}
 	
 	public double getNthFitness(int n) {
+		System.out.println("The " + n + "th best is " + population[0].playerName);
 		population[n].meNN.writeWeightsToFile(n + "th_" + outputFile + "_meNN.txt");
 		population[n].enemiesNN.writeWeightsToFile(n + "th_" + outputFile + "_enemiesNN.txt");
 		population[n].planetsNN.writeWeightsToFile(n + "th_" + outputFile + "_planetsNN.txt");
