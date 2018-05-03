@@ -186,7 +186,7 @@ public class ESnew {
 		population[0].enemiesNN.writeWeightsToFile(outputFile + "_enemiesNN.txt");
 		population[0].planetsNN.writeWeightsToFile(outputFile + "_planetsNN.txt");
 		population[0].commanderNN.writeWeightsToFile(outputFile + "_commanderNN.txt");
-	
+		System.out.println(population[0].fitItemsToString());
 		return fitness[0];
 	}
 	
@@ -196,6 +196,7 @@ public class ESnew {
 		population[n].enemiesNN.writeWeightsToFile(n + "th_" + outputFile + "_enemiesNN.txt");
 		population[n].planetsNN.writeWeightsToFile(n + "th_" + outputFile + "_planetsNN.txt");
 		population[n].commanderNN.writeWeightsToFile(n + "th_" + outputFile + "_commanderNN.txt");
+		System.out.println(population[n].fitItemsToString());
 		return fitness[n];
 	}
 }
